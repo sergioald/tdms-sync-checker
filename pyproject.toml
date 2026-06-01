@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tdms-sync-checker"
+version = "0.1.0"
+description = "Metadata-first TDMS QA/QC and synchronisation checker"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Sergio Dubon"}
+]
+keywords = ["TDMS", "synchronisation", "data-quality", "lab-data", "DAQ"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Manufacturing",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "nptdms>=1.7.0",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+plot = [
+    "matplotlib>=3.7",
+]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.4.0",
+    "pyinstaller>=6.0",
+    "matplotlib>=3.7",
+]
+
+[project.scripts]
+tdms-sync-checker = "tdms_sync_checker.cli:main"
+tdms-sync-checker-gui = "tdms_sync_checker.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120

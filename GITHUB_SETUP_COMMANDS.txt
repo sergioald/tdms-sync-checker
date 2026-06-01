@@ -1,0 +1,27 @@
+# GitHub setup commands
+
+# 1. Open a terminal in this folder:
+cd tdms-sync-checker-github
+
+# 2. Initialise Git:
+git init
+
+# 3. Add files:
+git add .
+
+# 4. Commit:
+git commit -m "Initial TDMS sync checker prototype"
+
+# 5. Create a GitHub repository called:
+# tdms-sync-checker
+
+# 6. Link remote repository:
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/tdms-sync-checker.git
+
+# 7. Push:
+git push -u origin main
+
+# Optional: create a tag
+git tag v0.1.0
+git push origin v0.1.0
