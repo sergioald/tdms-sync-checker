@@ -191,4 +191,4 @@ tdms-sync-checker/
 
 ## Citation / acknowledgement
 
-This project was developed as part of a PhD/laboratory workflow for TDMS data-quality checking and synchronisation review.
+This project was developed as part of a laboratory workflow for TDMS data-quality checking and synchronisation review.
