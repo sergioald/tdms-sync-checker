@@ -1,8 +1,9 @@
 # TDMS Sync Checker
 
+[![Tests](https://github.com/sergioald/tdms-sync-checker/actions/workflows/tests.yml/badge.svg)](https://github.com/sergioald/tdms-sync-checker/actions/workflows/tests.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-prototype%20v0.1.0-orange.svg)
+![Status](https://img.shields.io/badge/status-prototype%20v0.2-orange.svg)
 
 A **metadata-first Python tool** for checking TDMS file structure, timing metadata, group/channel synchronisation, split-file continuity, inactive channels, and suggested activity trimming.
 
@@ -13,28 +14,43 @@ It is designed for exploratory laboratory TDMS quality control where large files
 </p>
 
 <p align="center">
-  <em>GUI workflow after a completed metadata-first TDMS synchronisation check. Example paths and data shown in this screenshot are anonymised.</em>
+  <em>GUI workflow after a completed metadata-first TDMS synchronisation check. Example paths and data shown in screenshots are anonymised or synthetic.</em>
 </p>
 
-> **Status:** prototype / v0.1.0  
+> **Status:** prototype / v0.2  
 > Results should be reviewed by the user before they are used for engineering decisions.
 
 ---
 
-## What this repository provides
+## Why this project exists
 
-TDMS files from laboratory systems can contain different groups, channels, timestamps, sampling rates, sample counts, split-file sections, inactive channels, and start-up/buffer samples. This tool does **not** assume fixed channel names. It scans whatever is present and creates general QA/QC reports.
+TDMS files from laboratory systems can contain many acquisition groups, channel naming conventions, timestamps, sampling rates, sample counts, split-file sections, inactive channels, and start-up/buffer samples.
 
-The repository provides:
+This repository provides a public, confidentiality-safe QA/QC workflow for reviewing those metadata and timing issues before deeper engineering analysis. It is intended for:
 
-- a desktop GUI for selecting one TDMS file or a folder of TDMS files;
-- a command-line interface for repeatable checks;
-- inside-group and between-group synchronisation checks;
-- split-file continuity checks for folder-based acquisitions;
-- channel activity summaries for changing, constant, and mostly-zero channels;
-- suggested activity-trim estimates for review;
-- CSV, Excel, HTML, and plain-text report outputs;
-- optional downsampled plotting in a separate script to avoid GUI freezes with large TDMS files.
+- laboratory data-quality checks;
+- TDMS acquisition reviews;
+- sensor-heavy engineering workflows;
+- reproducible research-software demonstration;
+- portfolio review without exposing real facility data.
+
+The tool does **not** assume fixed channel names. It scans whatever is present and creates general QA/QC reports.
+
+For a reviewer-facing explanation, see [`docs/portfolio_summary.md`](docs/portfolio_summary.md). For what the tests do and do not prove, see [`docs/validation_scope.md`](docs/validation_scope.md). For confidentiality boundaries, see [`docs/confidentiality_statement.md`](docs/confidentiality_statement.md).
+
+---
+
+## What this repository demonstrates
+
+| Area | What is demonstrated |
+|---|---|
+| TDMS handling | Metadata and channel scanning across real-world TDMS-style group structures |
+| Timing QA/QC | Inside-group, between-group, and split-file timing consistency checks |
+| Engineering reporting | CSV, Excel, HTML, and plain-text outputs for reviewable QA/QC artefacts |
+| GUI usability | A Tkinter desktop interface for non-command-line review workflows |
+| CLI usability | Repeatable command-line execution for automated or scripted checks |
+| Public-safe examples | Synthetic/anonymised examples instead of real laboratory data |
+| Research software | Package structure, tests, CI, pre-commit, docs, limitations, and validation notes |
 
 ---
 
@@ -60,33 +76,45 @@ TDMS file or folder
 
 ## Quick start
 
-### 1. Install
+### Option A: Windows / Anaconda PowerShell Prompt
 
-Create and activate a virtual environment if possible, then install the package:
+```powershell
+conda create -n tdms_sync python=3.10 -y
+conda activate tdms_sync
 
-```bash
-pip install -e .
+git clone https://github.com/sergioald/tdms-sync-checker.git
+cd tdms-sync-checker
+
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+python -m pytest
 ```
 
-For development and tests:
+Run the GUI:
 
-```bash
-pip install -e ".[dev]"
-```
-
-### 2. Run the GUI
-
-```bash
+```powershell
 python tdms_sync_checker_gui.py
 ```
 
 Or, after installation:
 
-```bash
+```powershell
 tdms-sync-checker-gui
 ```
 
-### 3. Run from the command line
+### Option B: Standard Python environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
+---
+
+## Command-line usage
 
 Single TDMS file:
 
@@ -100,7 +128,17 @@ Folder of TDMS files:
 tdms-sync-checker --input "C:/path/to/folder" --output "C:/path/to/output"
 ```
 
-### 4. Run from Spyder
+PowerShell line-continuation example:
+
+```powershell
+tdms-sync-checker `
+  --input "C:/path/to/folder" `
+  --output "C:/path/to/output"
+```
+
+---
+
+## Spyder / Anaconda workflow
 
 Open and run:
 
@@ -112,6 +150,34 @@ The GUI will open. After analysis, use the **Report preview** tab to review the 
 
 ---
 
+## Synthetic TDMS example
+
+The repository avoids committing real laboratory TDMS data. To support public testing and demonstration, a small synthetic TDMS generator is provided:
+
+```powershell
+python examples/create_synthetic_tdms.py
+```
+
+This creates:
+
+```text
+examples/data/synthetic_tdms_reference.tdms
+```
+
+Then run the checker on the generated file:
+
+```powershell
+tdms-sync-checker `
+  --input "examples/data/synthetic_tdms_reference.tdms" `
+  --output "examples/outputs/synthetic_tdms_reference"
+```
+
+The synthetic file is not real facility data. It only imitates useful public-safe metadata patterns such as multiple acquisition groups, mixed sample rates, timestamp channels, CAN-style channel names, inactive channels, and small timing offsets.
+
+For details, see [`docs/synthetic_tdms_reference_summary.md`](docs/synthetic_tdms_reference_summary.md).
+
+---
+
 ## Example HTML report
 
 <p align="center">
@@ -119,7 +185,7 @@ The GUI will open. After analysis, use the **Report preview** tab to review the 
 </p>
 
 <p align="center">
-  <em>Generated HTML report with executive summary, inside-group checks, between-group synchronisation, and split-file continuity tables. Example paths and file names are anonymised.</em>
+  <em>Generated HTML report with executive summary, inside-group checks, between-group synchronisation, and split-file continuity tables. Example paths and file names are anonymised or synthetic.</em>
 </p>
 
 ---
@@ -188,6 +254,31 @@ The suggested activity trim is a **generic estimate**. It does not assume that z
 
 ---
 
+## Tests and quality checks
+
+Run the test suite:
+
+```powershell
+python -m pytest
+```
+
+Run Ruff manually:
+
+```powershell
+python -m ruff check .
+```
+
+Run pre-commit locally:
+
+```powershell
+pre-commit install
+pre-commit run --all-files
+```
+
+The current tests cover pure timing/activity functions, import/CLI smoke checks, and a mocked report-generation pipeline. They do not prove scientific synchronisation validity against every possible TDMS acquisition system. See [`docs/validation_scope.md`](docs/validation_scope.md).
+
+---
+
 ## Optional plotting
 
 Plotting is intentionally separated from the main GUI to avoid freezing with large TDMS files.
@@ -237,18 +328,21 @@ tdms-sync-checker/
 │   └── tdms_sync_checker_single_file_spyder.py
 ├── docs/
 │   ├── assets/
-│   │   ├── readme_gui_analysis_complete.png
-│   │   ├── readme_html_report_overview.png
-│   │   └── readme_workflow.png
+│   ├── confidentiality_statement.md
 │   ├── method_notes.md
-│   └── github_release_notes_v0.1.0.md
+│   ├── portfolio_summary.md
+│   ├── reviewer_guide.md
+│   ├── synthetic_tdms_reference_summary.md
+│   └── validation_scope.md
 ├── examples/
+│   ├── create_synthetic_tdms.py
 │   └── sample_output_description.md
 ├── tests/
 ├── tdms_sync_checker_gui.py
 ├── pyproject.toml
 ├── requirements.txt
 ├── README.md
+├── CHANGELOG.md
 ├── LICENSE
 └── .gitignore
 ```
