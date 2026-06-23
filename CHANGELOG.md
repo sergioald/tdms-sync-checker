@@ -4,27 +4,35 @@
 
 ### Added
 
-- Portfolio-oriented README polish with clearer reviewer positioning, Anaconda/Windows quick start, testing commands, and synthetic-example usage.
-- `docs/portfolio_summary.md` describing the repository as a public engineering-data QA/QC and research-software artefact.
-- `docs/reviewer_guide.md` with a short path for technical reviewers, recruiters, and collaborators.
-- `docs/confidentiality_statement.md` clarifying what must not be committed and how public-safe examples should be prepared.
-- `docs/synthetic_tdms_reference_summary.md` documenting the public-safe synthetic TDMS metadata pattern.
-- `examples/create_synthetic_tdms.py` for generating a small synthetic TDMS file without real laboratory data.
-- `examples/run_synthetic_example.py` for generating the synthetic file and running the checker on it.
+- Optional engineering diagnostics module for selected command/response channels.
+- Threshold-based edge detection for command and response signals.
+- Command-cycle duration estimation and stability summaries.
+- Command-response delay matching and delay-drift summaries.
+- Common active-window helper functions for selected channels.
+- Optional diagnostic plotting helpers for cycle duration and response delay.
+- `scripts/run_engineering_diagnostics.py` for running the new diagnostics on a selected TDMS file.
+- `docs/engineering_diagnostics.md` explaining usage, outputs, interpretation, and validation limitations.
+- Unit tests for the new engineering diagnostic functions.
 
-### Notes
+## v0.2.1
 
-- The synthetic TDMS example imitates metadata structure only. It does not copy measured data, confidential facility behaviour, or proprietary control logic.
-- This documentation-focused update does not change the core TDMS synchronisation algorithm.
+Documentation polish and synthetic TDMS example.
+
+- Improved reviewer-facing README structure.
+- Added portfolio summary documentation.
+- Added reviewer guide.
+- Added confidentiality statement.
+- Added synthetic TDMS reference summary.
+- Added reproducible synthetic TDMS example scripts.
 
 ## v0.2.0
 
-### Added
+Tests, CI, pre-commit, and validation notes.
 
 - Unit tests for important pure functions in the TDMS metadata QA/QC workflow.
 - Smoke tests for package imports, GUI-module import, and CLI help execution.
-- A mocked full-pipeline integration test that exercises report generation without requiring real TDMS data.
-- GitHub Actions CI for pre-commit checks and pytest on Python 3.10, 3.11, and 3.12.
+- Mocked full-pipeline integration test that exercises report generation without requiring real TDMS data.
+- GitHub Actions CI for pre-commit checks and pytest.
 - Local pre-commit configuration using Ruff.
 - Validation-scope documentation explaining what the tests do and do not prove.
 
